@@ -1,5 +1,6 @@
 ﻿using CSharpApp.Application.Products.Queries;
 using CSharpApp.Core.Dtos.Products;
+using CSharpApp.Core.Exceptions;
 using MediatR;
 
 
@@ -13,7 +14,13 @@ namespace CSharpApp.Application.Products.Handlers {
         }
 
         public async Task<IReadOnlyCollection<Product>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken) {
-            return await _productsService.GetProductsAsync();
+
+            try {
+
+                return await _productsService.GetProductsAsync();
+            } catch (Exception ex) {
+                throw new NotFoundException("Products page not available");
+            }
         }
     }
 }

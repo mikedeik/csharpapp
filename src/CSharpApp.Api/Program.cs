@@ -1,4 +1,6 @@
 using CSharpApp.Application.Products.Queries;
+using CSharpApp.Infrastructure.Middleware;
+using CSharpApp.Infrastructure.Middleware.App.Api.Middleware;
 using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +24,9 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseMiddleware<RequestPerformanceMiddleware>();
 
 app.UseHttpsRedirection();
 

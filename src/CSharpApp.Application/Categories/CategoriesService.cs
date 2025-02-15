@@ -1,4 +1,5 @@
 ﻿using CSharpApp.Core.Dtos.Categories;
+using CSharpApp.Core.Dtos.Products;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,8 +27,16 @@ namespace CSharpApp.Application.Categories {
             throw new NotImplementedException();
         }
 
-        public Task<IReadOnlyCollection<Category>> GetCategoriesAsync() {
-            throw new NotImplementedException();
+        public async Task<IReadOnlyCollection<Category>> GetCategoriesAsync() {
+            
+            var client = _httpClientFactory.CreateClient("fakeapi");
+            var response = await client.GetAsync(_restApiSettings.Categories);
+            response.EnsureSuccessStatusCode();
+
+            var content = await response.Content.ReadAsStringAsync();
+            var categories = JsonSerializer.Deserialize<List<Category>>(content);
+
+            return categories.AsReadOnly();
         }
 
         public Task<Category> GetCategoryByIdAsync(int categoryId) {

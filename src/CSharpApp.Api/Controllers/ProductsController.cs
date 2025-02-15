@@ -19,47 +19,19 @@ namespace CSharpApp.Api.Controllers {
 
         [HttpGet]
         public async Task<ActionResult<IReadOnlyCollection<Product>>> GetProducts() {
-            try {
-                var products = await _mediator.Send(new GetAllProductsQuery());
-                return Ok(products);
+            
 
-            }catch(Exception ex) {
-                return BadRequest(new ProblemDetails {
-                    Title = "Product page not available",
-                    Status = StatusCodes.Status400BadRequest,
-                    Detail = ex.Message,
-                    Instance = HttpContext.Request.Path
-                });
-            }
+            var products = await _mediator.Send(new GetAllProductsQuery());
+            return Ok(products);
 
         }
 
         [HttpGet("{productId}")]
         public async Task<ActionResult<IReadOnlyCollection<Product>>> GetProducts(int productId) {
 
-            try {
-
-                var product = await _mediator.Send(new GetProductByIdQuery(productId));
-
-                if (product == null) {
-                    return NotFound(new ProblemDetails {
-                        Title = "Product Not Found",
-                        Status = StatusCodes.Status404NotFound,
-                        Detail = $"Product with ID {productId} was not found.",
-                        Instance = HttpContext.Request.Path
-                    });
-                }
-
-                return Ok(product);
-
-            } catch (Exception ex) {
-                return BadRequest(new ProblemDetails {
-                    Title = "Product Not Found",
-                    Status = StatusCodes.Status400BadRequest,
-                    Detail = ex.Message,
-                    Instance = HttpContext.Request.Path
-                });
-            }
+            
+            var product = await _mediator.Send(new GetProductByIdQuery(productId));
+            return Ok(product);
         }
 
         [HttpPost]

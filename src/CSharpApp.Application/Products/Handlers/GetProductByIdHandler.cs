@@ -1,5 +1,6 @@
 ﻿using CSharpApp.Application.Products.Queries;
 using CSharpApp.Core.Dtos.Products;
+using CSharpApp.Core.Exceptions;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,13 @@ namespace CSharpApp.Application.Products.Handlers {
 
         public async Task<Product> Handle(GetProductByIdQuery request, CancellationToken cancellationToken) {
 
-            return await _productsService.GetProductByIdAsync(request.id);
+            var product = await _productsService.GetProductByIdAsync(request.id);
+
+            if (product == null) {
+                throw new NotFoundException($"Product with ID {request.id} was not found.");
+            }
+
+            return product;
         }
     }
 }

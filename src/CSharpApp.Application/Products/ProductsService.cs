@@ -38,10 +38,10 @@ public class ProductsService : IProductsService
         var client = _httpClientFactory.CreateClient("fakeapi");
         var response = await client.GetAsync($"{_restApiSettings.Products}/{id}");
 
-        //if (response.StatusCode == HttpStatusCode.BadRequest) {
+        if (response.StatusCode == HttpStatusCode.BadRequest) {
 
-        //    return null;
-        //}
+            return null;
+        }
 
         response.EnsureSuccessStatusCode();
         var content = await response.Content.ReadAsStringAsync();

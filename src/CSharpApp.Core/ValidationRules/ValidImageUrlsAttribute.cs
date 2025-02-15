@@ -11,6 +11,7 @@ namespace CSharpApp.Core.ValidationRules {
 
         private static readonly Regex UrlRegex = new(@"^(https?://.*\.(?:png|jpg|jpeg|gif|webp))$", RegexOptions.IgnoreCase);
 
+        // Checks validation for images array
         protected override ValidationResult IsValid(object value, ValidationContext validationContext) {
             if (value is List<string> images) {
                 if (!images.Any()) {
