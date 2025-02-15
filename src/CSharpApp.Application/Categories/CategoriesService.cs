@@ -1,10 +1,6 @@
-﻿using CSharpApp.Core.Dtos.Categories;
-using CSharpApp.Core.Dtos.Products;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Net;
+using CSharpApp.Core.Dtos.Categories;
+
 
 namespace CSharpApp.Application.Categories {
     public class CategoriesService : ICategoriesService {
@@ -39,8 +35,23 @@ namespace CSharpApp.Application.Categories {
             return categories.AsReadOnly();
         }
 
-        public Task<Category> GetCategoryByIdAsync(int categoryId) {
-            throw new NotImplementedException();
+        public async Task<Category?> GetCategoryByIdAsync(int categoryId)
+        {
+            var client = _httpClientFactory.CreateClient("fakeapi");
+            var response = await client.GetAsync($"{_restApiSettings.Categories}/{categoryId}");
+
+            if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+
+            response.EnsureSuccessStatusCode();
+
+            var content = await response.Content.ReadAsStringAsync();
+            var category = JsonSerializer.Deserialize<Category>(content);
+
+            return category;
+
         }
 
         public Task UpdateCategoryAsync(int categoryId, CategoryMutateDto updatedCategory) {
