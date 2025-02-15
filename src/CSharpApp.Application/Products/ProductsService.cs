@@ -1,4 +1,7 @@
 
+using CSharpApp.Core.Dtos.Products;
+using System.Net;
+
 namespace CSharpApp.Application.Products;
 
 public class ProductsService : IProductsService
@@ -15,7 +18,9 @@ public class ProductsService : IProductsService
         _logger = logger;
     }
 
-    public async Task<IReadOnlyCollection<Product>> GetProducts()
+    
+
+    public async Task<IReadOnlyCollection<Product>> GetProductsAsync()
     {
 
         var client = _httpClientFactory.CreateClient("fakeapi");
@@ -26,4 +31,24 @@ public class ProductsService : IProductsService
         
         return res.AsReadOnly();
     }
+
+
+    public async Task<Product?> GetProductByIdAsync(int id) {
+
+        var client = _httpClientFactory.CreateClient("fakeapi");
+        var response = await client.GetAsync($"{_restApiSettings.Products}/{id}");
+
+        //if (response.StatusCode == HttpStatusCode.BadRequest) {
+
+        //    return null;
+        //}
+
+        response.EnsureSuccessStatusCode();
+        var content = await response.Content.ReadAsStringAsync();
+        var res = JsonSerializer.Deserialize<Product>(content);
+
+        return res;
+    }
+
+
 }

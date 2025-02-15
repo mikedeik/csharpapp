@@ -1,7 +1,8 @@
-namespace CSharpApp.Core.Dtos;
+using CSharpApp.Core.Dtos.Categories;
 
-public sealed class Product
-{
+namespace CSharpApp.Core.Dtos.Products;
+
+public sealed class Product {
     [JsonPropertyName("id")]
     public int? Id { get; set; }
 

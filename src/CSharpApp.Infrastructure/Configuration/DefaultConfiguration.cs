@@ -1,3 +1,6 @@
+using CSharpApp.Application;
+using CSharpApp.Application.Products.Queries;
+
 namespace CSharpApp.Infrastructure.Configuration;
 
 public static class DefaultConfiguration
@@ -11,7 +14,8 @@ public static class DefaultConfiguration
         services.Configure<HttpClientSettings>(configuration.GetSection(nameof(HttpClientSettings)));
 
         services.AddTransient<IProductsService, ProductsService>();
-        
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(IApplicationMarker).Assembly));
+
         return services;
     }
 }
