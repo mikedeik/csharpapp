@@ -30,8 +30,9 @@ namespace CSharpApp.Application.Categories {
             var response = await client.PostAsync(_restApiSettings.Categories, jsonContent);
 
             if (!response.IsSuccessStatusCode) {
-                throw new HttpRequestException($"Failed to create category. Status Code: {response.StatusCode}");
+                var errorResponse = await response.Content.ReadAsStringAsync();
 
+                throw new BadRequestException($"Failed to create category. Status Code: {response.StatusCode}", errorResponse);
             }
 
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -70,7 +71,7 @@ namespace CSharpApp.Application.Categories {
             var content = await response.Content.ReadAsStringAsync();
             var category = JsonSerializer.Deserialize<Category>(content);
 
-            return category ?? throw new Exception("Failed to deserialize  category."); ;
+            return category ?? throw new Exception("Failed to deserialize  category.");
 
         }
 

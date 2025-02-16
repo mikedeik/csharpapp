@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 
 namespace CSharpApp.Core.Dtos.Products {
-    public class ProductMutateDto {
+    public class ProductCreateDto {
         [JsonPropertyName("title")]
         [Required(ErrorMessage = "Title is required.")]
         [MinLength(1, ErrorMessage = "Title cannot be empty.")]

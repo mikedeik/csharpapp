@@ -35,7 +35,7 @@ namespace CSharpApp.Api.Controllers {
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProduct([FromBody] ProductMutateDto newProduct) {
+        public async Task<IActionResult> CreateProduct([FromBody] ProductCreateDto newProduct) {
 
             if (!ModelState.IsValid) {
                 return BadRequest(Problem(

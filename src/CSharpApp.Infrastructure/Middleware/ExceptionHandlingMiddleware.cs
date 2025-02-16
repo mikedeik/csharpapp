@@ -21,12 +21,12 @@ namespace CSharpApp.Infrastructure.Middleware {
                 await _next(context);
             } catch (NotFoundException ex) {
                 // Log the full error response for debugging/monitoring
-                _logger.LogWarning("Error response from external API: " + ex.FullErrorResponse);
+                _logger.LogWarning($"Error response from API: {ex.FullErrorResponse}");
 
                 // Return only a simplified message to the client
                 await HandleExceptionAsync(context, StatusCodes.Status404NotFound, "Not Found", ex.Message);
             } catch (BadRequestException ex) {
-                _logger.LogWarning(ex.Message);
+                _logger.LogWarning($"Error response from API: {ex.FullErrorResponse}");
                 await HandleExceptionAsync(context, StatusCodes.Status400BadRequest, "Bad Request", ex.Message);
             } catch (Exception ex) {
                 _logger.LogError(ex, "An unexpected error occurred.");
