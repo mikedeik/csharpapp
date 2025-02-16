@@ -10,7 +10,7 @@ namespace CSharpApp.Core.Interfaces {
         
         Task<IReadOnlyCollection<Category>> GetCategoriesAsync();
         Task<Category> GetCategoryByIdAsync(int categoryId);
-        Task<Category> CreateCategory(CategoryMutateDto newCategory);
+        Task<Category> CreateCategoryAsync(CategoryMutateDto newCategory);
         Task UpdateCategoryAsync(int categoryId, CategoryMutateDto updatedCategory);
     }
 }

@@ -21,9 +21,9 @@ namespace CSharpApp.Application.Products.Handlers {
 
             var product = await _productsService.GetProductByIdAsync(request.id);
 
-            if (product == null) {
-                throw new NotFoundException($"Product with ID {request.id} was not found.");
-            }
+            //if (product == null) {
+            //    throw new NotFoundException($"Product with ID {request.id} was not found.");
+            //}
 
             return product;
         }

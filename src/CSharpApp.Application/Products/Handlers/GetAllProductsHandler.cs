@@ -15,12 +15,7 @@ namespace CSharpApp.Application.Products.Handlers {
 
         public async Task<IReadOnlyCollection<Product>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken) {
 
-            try {
-
-                return await _productsService.GetProductsAsync();
-            } catch (Exception ex) {
-                throw new NotFoundException("Products page not available");
-            }
+            return await _productsService.GetProductsAsync();
         }
     }
 }

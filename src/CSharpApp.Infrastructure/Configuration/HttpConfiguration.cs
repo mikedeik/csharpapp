@@ -11,13 +11,14 @@ public static class HttpConfiguration
 
         var httpClientSettings = configuration.GetSection("HttpClientSettings").Get<HttpClientSettings>();
         var httpClientBaseUrl = configuration.GetSection("RestApiSettings:BaseUrl").Get<string>();
+        var restApiName = configuration.GetSection("RestApiSettings:APIName").Get<string>();
 
         // Define a timeout policy
         var timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(httpClientSettings.LifeTime));
 
         // Using Polly to implement Retry policy
         // Added package Polly.Contrib.WaitAndRetry 
-        services.AddHttpClient("fakeapi", client => {
+        services.AddHttpClient(restApiName, client => {
             client.BaseAddress = new Uri(httpClientBaseUrl);
         }).AddTransientHttpErrorPolicy(policyBuilder =>
             policyBuilder.WaitAndRetryAsync(

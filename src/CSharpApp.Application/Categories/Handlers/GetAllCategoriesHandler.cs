@@ -14,12 +14,7 @@ public class GetAllCategoriesHandler: IRequestHandler<GetAllCategoriesQuery, IRe
     }
     public async Task<IReadOnlyCollection<Category>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationToken) {
         
-        try {
-
-            return await _categoriesService.GetCategoriesAsync();
-            
-        } catch (Exception ex) {
-            throw new NotFoundException("Categories page not available");
-        }
+        return await _categoriesService.GetCategoriesAsync();      
+       
     }
 }

@@ -10,6 +10,7 @@ namespace CSharpApp.Core.Dtos.Categories {
         public string? Name { get; set; }
 
         [JsonPropertyName("image")]
+        [Required(ErrorMessage = "Image property is required")]
         [ValidImageUrl(ErrorMessage = "The image URL is not valid.")]
         public string? Image { get; set; }
     }

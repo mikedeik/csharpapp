@@ -20,34 +20,33 @@ namespace CSharpApp.Infrastructure.Middleware {
             try {
                 await _next(context);
             } catch (NotFoundException ex) {
+                // Log the full error response for debugging/monitoring
+                _logger.LogWarning("Error response from external API: " + ex.FullErrorResponse);
+
+                // Return only a simplified message to the client
+                await HandleExceptionAsync(context, StatusCodes.Status404NotFound, "Not Found", ex.Message);
+            } catch (BadRequestException ex) {
                 _logger.LogWarning(ex.Message);
-                context.Response.StatusCode = StatusCodes.Status404NotFound;
-                context.Response.ContentType = "application/json"; // Set the response content type
-
-                var problemDetails = new ProblemDetails {
-                    Title = "Not Found",
-                    Status = StatusCodes.Status404NotFound,
-                    Detail = ex.Message,
-                    Instance = context.Request.Path
-                };
-
-                var jsonResponse = JsonSerializer.Serialize(problemDetails);
-                await context.Response.WriteAsync(jsonResponse);
+                await HandleExceptionAsync(context, StatusCodes.Status400BadRequest, "Bad Request", ex.Message);
             } catch (Exception ex) {
                 _logger.LogError(ex, "An unexpected error occurred.");
-                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                context.Response.ContentType = "application/json"; // Set the response content type
-
-                var problemDetails = new ProblemDetails {
-                    Title = "Server Error",
-                    Status = StatusCodes.Status500InternalServerError,
-                    Detail = "An unexpected error occurred.",
-                    Instance = context.Request.Path
-                };
-
-                var jsonResponse = JsonSerializer.Serialize(problemDetails);
-                await context.Response.WriteAsync(jsonResponse);
+                await HandleExceptionAsync(context, StatusCodes.Status500InternalServerError, "Server Error", "An unexpected error occurred.");
             }
+        }
+
+        private static async Task HandleExceptionAsync(HttpContext context, int statusCode, string title, string detail) {
+            context.Response.StatusCode = statusCode;
+            context.Response.ContentType = "application/json";
+
+            var problemDetails = new ProblemDetails {
+                Title = title,
+                Status = statusCode,
+                Detail = detail,
+                Instance = context.Request.Path
+            };
+
+            var jsonResponse = JsonSerializer.Serialize(problemDetails);
+            await context.Response.WriteAsync(jsonResponse);
         }
     }
 

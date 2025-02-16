@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace CSharpApp.Core.Exceptions {
     public class NotFoundException : Exception {
-        public NotFoundException(string message) : base(message) { }
+        public string FullErrorResponse { get; }
+
+        public NotFoundException(string message, string fullErrorResponse)
+            : base(message) {
+            FullErrorResponse = fullErrorResponse;
+        }
     }
+
 }
