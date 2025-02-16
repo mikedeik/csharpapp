@@ -16,7 +16,7 @@ namespace CSharpApp.Application.Categories.Handlers {
         }
 
         public async Task<Category> Handle(CreateCategoryCommand request, CancellationToken cancellationToken) {
-            var category = await _categoriesService.CreateCategoryAsync(request.Dto);
+            var category = await _categoriesService.CreateCategoryAsync(request.MutateDto);
             return category;
         }
     }

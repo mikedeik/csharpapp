@@ -4,6 +4,7 @@ using CSharpApp.Core.Dtos.Products;
 using CSharpApp.Core.Exceptions;
 using System.Net;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace CSharpApp.Application.Products;
 
@@ -82,7 +83,12 @@ public class ProductsService : IProductsService
         var client = _httpClientFactory.CreateClient(_restApiSettings.APIName);
 
         var requestUrl = $"{_restApiSettings.Products}/{productId}";
-        var jsonContent = new StringContent(JsonSerializer.Serialize(updatedProduct), Encoding.UTF8, "application/json");
+
+        var options = new JsonSerializerOptions {
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        };
+
+        var jsonContent = new StringContent(JsonSerializer.Serialize(updatedProduct, options), Encoding.UTF8, "application/json");
 
         var response = await client.PutAsync(requestUrl, jsonContent);
 

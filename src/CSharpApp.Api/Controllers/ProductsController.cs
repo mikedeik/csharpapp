@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using CSharpApp.Application.Products.Commands;
 using CSharpApp.Application.Products.Queries;
 using CSharpApp.Core.Dtos.Products;
 using MediatR;
@@ -27,7 +28,7 @@ namespace CSharpApp.Api.Controllers {
         }
 
         [HttpGet("{productId}")]
-        public async Task<ActionResult<IReadOnlyCollection<Product>>> GetProducts(int productId) {
+        public async Task<ActionResult<IReadOnlyCollection<Product>>> GetProductById(int productId) {
 
             
             var product = await _mediator.Send(new GetProductByIdQuery(productId));
@@ -37,19 +38,17 @@ namespace CSharpApp.Api.Controllers {
         [HttpPost]
         public async Task<IActionResult> CreateProduct([FromBody] ProductCreateDto newProduct) {
 
-            if (!ModelState.IsValid) {
-                return BadRequest(Problem(
-                            title: "Validation Error",
-                            detail: "Some fields have incorrect values.",
-                            statusCode: StatusCodes.Status400BadRequest,
-                            extensions: new Dictionary<string, object?>
-                            {
-                                { "errors", ModelState }
-                            }
-                 ));
-            }
-
-            return Ok("Product created!");
+            var product = await _mediator.Send(new CreateProductCommand(newProduct));
+            return CreatedAtAction(nameof(GetProductById), new { productId = product.Id}, product);
         }
+
+        [HttpPut("{productId}")]
+        public async Task<IActionResult> UpdateProduct(int productId, [FromBody] ProductUpdateDto updatedProduct) {
+
+
+            await _mediator.Send(new UpdateProductCommand(productId, updatedProduct));
+            return NoContent();
+        }
+
     }
 }

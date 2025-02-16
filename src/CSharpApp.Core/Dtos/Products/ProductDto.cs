@@ -1,4 +1,5 @@
 using CSharpApp.Core.Dtos.Categories;
+using CSharpApp.Core.Dtos.Converters;
 
 namespace CSharpApp.Core.Dtos.Products;
 
@@ -16,7 +17,8 @@ public sealed class Product {
     public string? Description { get; set; }
 
     [JsonPropertyName("images")]
-    public List<string> Images { get; } = [];
+    [JsonConverter(typeof(ImagesArrayJsonConverter))]
+    public List<string> Images { get; set; } = [];
 
     [JsonPropertyName("creationAt")]
     public DateTime? CreationAt { get; set; }

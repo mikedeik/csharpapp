@@ -22,6 +22,6 @@ namespace CSharpApp.Core.Dtos.Products {
 
         [JsonPropertyName("images")]
         [ValidImageUrls(ErrorMessage = "All images must be valid URLs.")]
-        public List<string>? Images { get; set; } = [];
+        public List<string>? Images { get; set; }
     }
 }

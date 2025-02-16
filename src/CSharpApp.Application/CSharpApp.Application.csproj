@@ -18,8 +18,4 @@
       <ProjectReference Include="..\CSharpApp.Core\CSharpApp.Core.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Products\Commands\" />
-    </ItemGroup>
-
 </Project>

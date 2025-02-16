@@ -1,4 +1,5 @@
 ﻿using CSharpApp.Core.Dtos.Categories;
+using CSharpApp.Core.Dtos.Products;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -7,12 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace CSharpApp.Application.Categories.Commands {
-    public class CreateCategoryCommand : IRequest<Category> {
-        public CategoryMutateDto Dto { get; }
-
-        public CreateCategoryCommand(CategoryMutateDto dto) {
-            Dto = dto;
-        }
-    }
+    public record CreateCategoryCommand(CategoryMutateDto MutateDto) : IRequest<Category>;
 
 }
