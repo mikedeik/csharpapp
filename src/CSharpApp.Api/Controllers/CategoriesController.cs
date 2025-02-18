@@ -2,13 +2,14 @@ using Asp.Versioning;
 using CSharpApp.Application.Categories.Commands;
 using CSharpApp.Application.Categories.Queries;
 using CSharpApp.Core.Dtos.Categories;
-using CSharpApp.Core.Exceptions;
-using CSharpApp.Core.Settings;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CSharpApp.Api.Controllers;
+
 [ApiController]
+[Authorize]
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiVersion("1.0")]
 public class CategoriesController: ControllerBase

@@ -1,13 +1,11 @@
 ﻿using CSharpApp.Core.Dtos.Auth;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Net;
 using CSharpApp.Core.Exceptions;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Text.Json.Serialization;
 
 namespace CSharpApp.Application.Authentication {
     public class AuthenticationService : IAuthenticationService {
@@ -44,21 +42,54 @@ namespace CSharpApp.Application.Authentication {
 
 
             return new AuthResponse {
-                AccessToken = GenerateAccessToken(loginCredentials),
+                AccessToken = GenerateAccessToken(loginCredentials.Email),
                 RefreshToken = GenerateRefreshToken(loginCredentials.Email),
             };
 
         }
 
-        public Task<AuthResponse> Refresh(string refreshToken) {
-            throw new NotImplementedException();
+        public async Task<AuthResponse> Refresh(string refreshToken) {
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(refreshToken);
+            string email = jwtToken.Claims.FirstOrDefault(c => c.Type == "unique_name")?.Value ?? throw new UnauthorizedException("The refresh token is not valid");
+
+            // A simple validation that the user exists since we are not storing/forwarding tokens of the 
+            // external api will be to call the users/is-available for the stored email.
+            // If it's active validation fails
+
+            var client = _httpClientFactory.CreateClient(_restApiSettings.APIName);
+            var loginCredentials = new LoginCredentials {
+                Email = email,
+                Password = null
+            };
+
+            var options = new JsonSerializerOptions {
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+            };
+
+            var context = new StringContent(JsonSerializer.Serialize(loginCredentials, options), Encoding.UTF8, "application/json");
+            var response = await client.PostAsync(_restApiSettings.UserAvailable, context);
+
+            response.EnsureSuccessStatusCode();
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var userAvailable = JsonSerializer.Deserialize<UserAvailableDto>(responseContent);
+
+            if (userAvailable.IsAvailable) throw new UnauthorizedException("No active user found. Please login.");
+
+            return new AuthResponse {
+                AccessToken = GenerateAccessToken(email),
+                RefreshToken = GenerateRefreshToken(email),
+            };
+
         }
 
 
-        private string GenerateAccessToken(LoginCredentials loginCredentials) {
+        private string GenerateAccessToken(string email) {
 
             var claims = new List<Claim>() {
-                new Claim(ClaimTypes.Name, loginCredentials.Email),
+                new Claim(ClaimTypes.Name, email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
             var tokenDescriptor = new SecurityTokenDescriptor {

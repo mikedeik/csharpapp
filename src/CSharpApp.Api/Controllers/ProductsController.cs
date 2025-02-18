@@ -3,11 +3,13 @@ using CSharpApp.Application.Products.Commands;
 using CSharpApp.Application.Products.Queries;
 using CSharpApp.Core.Dtos.Products;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CSharpApp.Api.Controllers {
 
     [ApiController]
+    [Authorize]
     [Route("api/v{version:apiVersion}/products")]
     [ApiVersion("1.0")]
     public class ProductsController : ControllerBase {

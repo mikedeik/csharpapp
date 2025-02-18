@@ -10,4 +10,6 @@ namespace CSharpApp.Application.Products.Commands {
     
     public record CreateProductCommand(ProductCreateDto ProductCreateDto) : IRequest<Product>;
 
+
+
 }
