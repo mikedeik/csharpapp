@@ -28,6 +28,10 @@ namespace CSharpApp.Infrastructure.Middleware {
             } catch (BadRequestException ex) {
                 _logger.LogWarning($"Error response from API: {ex.FullErrorResponse}");
                 await HandleExceptionAsync(context, StatusCodes.Status400BadRequest, "Bad Request", ex.Message);
+
+            } catch (UnauthorizedException ex) {
+                _logger.LogError(ex.Message);
+                await HandleExceptionAsync(context, StatusCodes.Status401Unauthorized, "Unauthorized", ex.Message);
             } catch (Exception ex) {
                 _logger.LogError(ex, "An unexpected error occurred.");
                 await HandleExceptionAsync(context, StatusCodes.Status500InternalServerError, "Server Error", "An unexpected error occurred.");

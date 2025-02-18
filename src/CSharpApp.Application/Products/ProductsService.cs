@@ -1,5 +1,4 @@
 
-using CSharpApp.Core.Dtos.Categories;
 using CSharpApp.Core.Dtos.Products;
 using CSharpApp.Core.Exceptions;
 using System.Net;
@@ -12,14 +11,12 @@ public class ProductsService : IProductsService
 {
     private readonly  IHttpClientFactory _httpClientFactory;
     private readonly RestApiSettings _restApiSettings;
-    private readonly ILogger<ProductsService> _logger;
 
     public ProductsService(IOptions<RestApiSettings> restApiSettings, 
-        ILogger<ProductsService> logger, IHttpClientFactory httpClientFactory)
+        IHttpClientFactory httpClientFactory)
     {
         _httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
         _restApiSettings = restApiSettings.Value ?? throw new ArgumentNullException(nameof(restApiSettings));
-        _logger = logger;
     }
 
     
@@ -27,7 +24,7 @@ public class ProductsService : IProductsService
     public async Task<IReadOnlyCollection<Product>> GetProductsAsync()
     {
 
-        var client = _httpClientFactory.CreateClient("fakeapi");
+        var client = _httpClientFactory.CreateClient(_restApiSettings.APIName);
         var response = await client.GetAsync(_restApiSettings.Products);
         response.EnsureSuccessStatusCode();
         var content = await response.Content.ReadAsStringAsync();
@@ -39,7 +36,7 @@ public class ProductsService : IProductsService
 
     public async Task<Product?> GetProductByIdAsync(int id) {
 
-        var client = _httpClientFactory.CreateClient("fakeapi");
+        var client = _httpClientFactory.CreateClient(_restApiSettings.APIName);
         var response = await client.GetAsync($"{_restApiSettings.Products}/{id}");
 
         if (!response.IsSuccessStatusCode) {

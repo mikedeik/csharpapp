@@ -9,15 +9,12 @@ namespace CSharpApp.Application.Categories {
 
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly RestApiSettings _restApiSettings;
-        private readonly ILogger<CategoriesService> _logger;
 
         public CategoriesService(IHttpClientFactory httpClientFactory,
-            IOptions<RestApiSettings> restApiSettings, 
-            ILogger<CategoriesService> logger) 
+            IOptions<RestApiSettings> restApiSettings) 
             {
             _httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
             _restApiSettings = restApiSettings.Value ?? throw new ArgumentNullException(nameof(restApiSettings));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         }
 

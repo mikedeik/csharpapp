@@ -20,11 +20,6 @@ namespace CSharpApp.Application.Products.Handlers {
         public async Task<Product> Handle(GetProductByIdQuery request, CancellationToken cancellationToken) {
 
             var product = await _productsService.GetProductByIdAsync(request.id);
-
-            //if (product == null) {
-            //    throw new NotFoundException($"Product with ID {request.id} was not found.");
-            //}
-
             return product;
         }
     }

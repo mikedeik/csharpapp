@@ -13,13 +13,11 @@ namespace CSharpApp.Application.Tests.Categories {
     public class CategoriesServiceTests {
         private readonly Mock<IHttpClientFactory> _httpClientFactoryMock;
         private readonly Mock<IOptions<RestApiSettings>> _restApiSettingsMock;
-        private readonly Mock<ILogger<CategoriesService>> _loggerMock;
         private readonly CategoriesService _categoriesService;
 
         public CategoriesServiceTests() {
             _httpClientFactoryMock = new Mock<IHttpClientFactory>();
             _restApiSettingsMock = new Mock<IOptions<RestApiSettings>>();
-            _loggerMock = new Mock<ILogger<CategoriesService>>();
 
             var restApiSettings = new RestApiSettings {
                 APIName = "TestAPI",
@@ -29,13 +27,12 @@ namespace CSharpApp.Application.Tests.Categories {
 
             _categoriesService = new CategoriesService(
                 _httpClientFactoryMock.Object,
-                _restApiSettingsMock.Object,
-                _loggerMock.Object
+                _restApiSettingsMock.Object
             );
         }
 
         [Fact]
-        public async Task CreateCategoryAsync_Success() {
+        public async Task CreateCategoryAsync_ShouldReturnCategory_WhenRequestIsSuccessful() {
             // Arrange
             var newCategory = new CategoryMutateDto { Name = "Test Category" };
             var expectedCategory = new Category { Id = 1, Name = "Test Category" };
@@ -53,7 +50,7 @@ namespace CSharpApp.Application.Tests.Categories {
                 });
 
             var httpClient = new HttpClient(httpClientMock.Object) {
-                BaseAddress = new Uri("http://localhost") // Set a base address
+                BaseAddress = new Uri("http://localhost") 
             };
             _httpClientFactoryMock.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
@@ -67,7 +64,7 @@ namespace CSharpApp.Application.Tests.Categories {
         }
 
         [Fact]
-        public async Task CreateCategoryAsync_Failure() {
+        public async Task CreateCategoryAsync_ShouldThrowBadRequestException_WhenRequestFails() {
             // Arrange
             var newCategory = new CategoryMutateDto { Name = "Test Category" };
             var httpClientMock = new Mock<HttpMessageHandler>();
@@ -84,7 +81,7 @@ namespace CSharpApp.Application.Tests.Categories {
                 });
 
             var httpClient = new HttpClient(httpClientMock.Object) {
-                BaseAddress = new Uri("http://localhost") // Set a base address
+                BaseAddress = new Uri("http://localhost") 
             };
             _httpClientFactoryMock.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
@@ -93,7 +90,7 @@ namespace CSharpApp.Application.Tests.Categories {
         }
 
         [Fact]
-        public async Task GetCategoriesAsync_Success() {
+        public async Task GetCategoriesAsync_ShouldReturnListOfCategories_WhenRequestIsSuccessful() {
             // Arrange
             var expectedCategories = new List<Category>
             {
@@ -115,7 +112,7 @@ namespace CSharpApp.Application.Tests.Categories {
                 });
 
             var httpClient = new HttpClient(httpClientMock.Object) {
-                BaseAddress = new Uri("http://localhost") // Set a base address
+                BaseAddress = new Uri("http://localhost")
             };
             _httpClientFactoryMock.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
@@ -128,7 +125,7 @@ namespace CSharpApp.Application.Tests.Categories {
         }
 
         [Fact]
-        public async Task GetCategoryByIdAsync_Success() {
+        public async Task GetCategoryByIdAsync_ShouldReturnCategory_WhenCategoryExists() {
             // Arrange
             var categoryId = 1;
             var expectedCategory = new Category { Id = categoryId, Name = "Test Category" };
@@ -146,7 +143,7 @@ namespace CSharpApp.Application.Tests.Categories {
                     Content = new StringContent(JsonSerializer.Serialize(expectedCategory)),
                 });
             var httpClient = new HttpClient(httpClientMock.Object) {
-                BaseAddress = new Uri("http://localhost") // Set a base address
+                BaseAddress = new Uri("http://localhost") 
             };
             _httpClientFactoryMock.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
@@ -160,7 +157,7 @@ namespace CSharpApp.Application.Tests.Categories {
         }
 
         [Fact]
-        public async Task GetCategoryByIdAsync_NotFound() {
+        public async Task GetCategoryByIdAsync_ShouldThrowNotFoundException_WhenCategoryDoesNotExist() {
             // Arrange
             var categoryId = 1;
             var httpClientMock = new Mock<HttpMessageHandler>();
@@ -177,7 +174,7 @@ namespace CSharpApp.Application.Tests.Categories {
                 });
 
             var httpClient = new HttpClient(httpClientMock.Object) {
-                BaseAddress = new Uri("http://localhost") // Set a base address
+                BaseAddress = new Uri("http://localhost") 
             };
             _httpClientFactoryMock.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
@@ -186,7 +183,7 @@ namespace CSharpApp.Application.Tests.Categories {
         }
 
         [Fact]
-        public async Task UpdateCategoryAsync_Success() {
+        public async Task UpdateCategoryAsync_ShouldCompleteSuccessfully_WhenCategoryExists() {
             // Arrange
             var categoryId = 1;
             var updatedCategory = new CategoryMutateDto { Name = "Updated Category" };
@@ -204,7 +201,7 @@ namespace CSharpApp.Application.Tests.Categories {
                 });
 
             var httpClient = new HttpClient(httpClientMock.Object) {
-                BaseAddress = new Uri("http://localhost") // Set a base address
+                BaseAddress = new Uri("http://localhost") 
             };
             _httpClientFactoryMock.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
@@ -216,7 +213,7 @@ namespace CSharpApp.Application.Tests.Categories {
         }
 
         [Fact]
-        public async Task UpdateCategoryAsync_NotFound() {
+        public async Task UpdateCategoryAsync_ShouldThrowNotFoundException_WhenCategoryDoesNotExist() {
             // Arrange
             var categoryId = 1;
             var updatedCategory = new CategoryMutateDto { Name = "Updated Category" };
@@ -235,7 +232,7 @@ namespace CSharpApp.Application.Tests.Categories {
                 });
 
             var httpClient = new HttpClient(httpClientMock.Object) {
-                BaseAddress = new Uri("http://localhost") // Set a base address
+                BaseAddress = new Uri("http://localhost") 
             };
             _httpClientFactoryMock.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(httpClient);
 

@@ -15,6 +15,7 @@ builder.Services.AddControllers();
 builder.Services.AddDefaultConfiguration();
 builder.Services.AddHttpConfiguration(builder.Configuration);
 builder.Services.AddProblemDetails();
+builder.Services.AddAuthenticationConfiguration(builder.Configuration);
 builder.Services.AddApiVersioning();
 
 var app = builder.Build();
@@ -31,7 +32,8 @@ app.UseMiddleware<RequestPerformanceMiddleware>();
 app.UseHttpsRedirection();
 
 app.UseRouting();
-//app.UseAuthorization();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 

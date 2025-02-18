@@ -1,6 +1,6 @@
 using CSharpApp.Application;
+using CSharpApp.Application.Authentication;
 using CSharpApp.Application.Categories;
-using CSharpApp.Application.Products.Queries;
 
 namespace CSharpApp.Infrastructure.Configuration;
 
@@ -13,9 +13,11 @@ public static class DefaultConfiguration
 
         services.Configure<RestApiSettings>(configuration!.GetSection(nameof(RestApiSettings)));
         services.Configure<HttpClientSettings>(configuration.GetSection(nameof(HttpClientSettings)));
+        services.Configure<AuthenticationSettings>(configuration.GetSection(nameof(AuthenticationSettings)));
 
         services.AddTransient<IProductsService, ProductsService>();
         services.AddTransient<ICategoriesService, CategoriesService>();
+        services.AddTransient<IAuthenticationService, AuthenticationService>();
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(IApplicationMarker).Assembly));
 
         return services;
