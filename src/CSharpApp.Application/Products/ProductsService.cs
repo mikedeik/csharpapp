@@ -1,4 +1,5 @@
 
+using CSharpApp.Core.Dtos.Categories;
 using CSharpApp.Core.Dtos.Products;
 using CSharpApp.Core.Exceptions;
 using System.Net;
@@ -99,5 +100,21 @@ public class ProductsService : IProductsService
 
 
 
+    }
+
+    public async Task DeleteProductAsync(int productId) {
+        var client = _httpClientFactory.CreateClient(_restApiSettings.APIName);
+
+        var requestUrl = $"{_restApiSettings.Products}/{productId}";
+
+        var response = await client.DeleteAsync(requestUrl);
+        if (!response.IsSuccessStatusCode) {
+            var errorResponse = await response.Content.ReadAsStringAsync();
+
+            if (response.StatusCode == HttpStatusCode.BadRequest && errorResponse.Contains("EntityNotFoundError")) {
+                throw new NotFoundException($"Product with ID {productId} not found.", errorResponse);
+            }
+            throw new Exception($"failed to delete category {productId}. API response: {errorResponse}");
+        }
     }
 }

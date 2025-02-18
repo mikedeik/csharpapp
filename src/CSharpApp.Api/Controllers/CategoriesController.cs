@@ -50,4 +50,11 @@ public class CategoriesController: ControllerBase
 
         return NoContent(); // 204 No Content (best practice for updates)
     }
+
+    [HttpDelete("{categoryId}")]
+    public async Task<IActionResult> DeleteCategory(int categoryId) {
+
+        await _mediator.Send(new DeleteCategoryCommand(categoryId));
+        return NoContent();
+    }
 }

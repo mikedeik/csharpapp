@@ -52,5 +52,12 @@ namespace CSharpApp.Api.Controllers {
             return NoContent();
         }
 
+        [HttpDelete("{productId}")]
+        public async Task<IActionResult> DeleteProduct(int productId) {
+
+            await _mediator.Send(new DeleteProductCommad(productId));
+            return NoContent();
+        }
+
     }
 }

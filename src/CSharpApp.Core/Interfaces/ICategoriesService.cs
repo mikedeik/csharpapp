@@ -12,5 +12,6 @@ namespace CSharpApp.Core.Interfaces {
         Task<Category> GetCategoryByIdAsync(int categoryId);
         Task<Category> CreateCategoryAsync(CategoryMutateDto newCategory);
         Task UpdateCategoryAsync(int categoryId, CategoryMutateDto updatedCategory);
+        Task DeleteCategoryAsync(int categoryId);
     }
 }

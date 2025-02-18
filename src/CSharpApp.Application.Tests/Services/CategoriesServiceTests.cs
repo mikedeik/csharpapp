@@ -239,5 +239,90 @@ namespace CSharpApp.Application.Tests.Categories {
             // Act & Assert
             await Assert.ThrowsAsync<NotFoundException>(() => _categoriesService.UpdateCategoryAsync(categoryId, updatedCategory));
         }
+
+
+        [Fact]
+        public async Task DeleteCategoryAsync_ShouldThrowNotFoundException_WhenCategoryDoesNotExist() {
+            // Arrange
+            var categoryId = 1;
+
+            var httpClientMock = new Mock<HttpMessageHandler>();
+            httpClientMock
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .ReturnsAsync(new HttpResponseMessage {
+                    StatusCode = HttpStatusCode.BadRequest,
+                    Content = new StringContent("EntityNotFoundError"),
+                });
+
+            var httpClient = new HttpClient(httpClientMock.Object) {
+                BaseAddress = new Uri("http://localhost")
+            };
+            _httpClientFactoryMock.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(httpClient);
+
+            // Act & Assert
+            await Assert.ThrowsAsync<NotFoundException>(() => _categoriesService.DeleteCategoryAsync(categoryId));
+        }
+
+
+        [Fact]
+        public async Task DeleteCategoryAsync_ShouldThrowBadRequestException_WhenCategoryIsInUse() {
+            // Arrange
+            var categoryId = 1;
+
+            var httpClientMock = new Mock<HttpMessageHandler>();
+            httpClientMock
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .ReturnsAsync(new HttpResponseMessage {
+                    StatusCode = HttpStatusCode.BadRequest,
+                    Content = new StringContent("QueryFailedError"),
+                });
+
+            var httpClient = new HttpClient(httpClientMock.Object) {
+                BaseAddress = new Uri("http://localhost")
+            };
+            _httpClientFactoryMock.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(httpClient);
+
+            // Act & Assert
+            await Assert.ThrowsAsync<BadRequestException>(() => _categoriesService.DeleteCategoryAsync(categoryId));
+        }
+
+        [Fact]
+        public async Task DeleteCategoryAsync_ShouldCompleteSuccessfully_WhenCategoryExistsAndNotInUse() {
+            // Arrange
+            var categoryId = 1;
+
+            var httpClientMock = new Mock<HttpMessageHandler>();
+            httpClientMock
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .ReturnsAsync(new HttpResponseMessage {
+                    StatusCode = HttpStatusCode.OK,
+                    Content = new StringContent("true"),
+                });
+
+            var httpClient = new HttpClient(httpClientMock.Object) {
+                BaseAddress = new Uri("http://localhost")
+            };
+            _httpClientFactoryMock.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(httpClient);
+
+            // Act 
+            await _categoriesService.DeleteCategoryAsync(categoryId);
+
+            // No Excption should be thrown
+        }
     }
 }

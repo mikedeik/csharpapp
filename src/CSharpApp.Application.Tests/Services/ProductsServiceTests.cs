@@ -402,5 +402,59 @@ namespace CSharpApp.Application.Tests.Products {
             // Act & Assert
             await Assert.ThrowsAsync<BadRequestException>(() => _productsService.UpdateProductAsync(productId, updatedProduct));
         }
+
+        [Fact]
+        public async Task DeleteProductAsync_ShouldThrowNotFound_WhenProductDoesNotExist() {
+            // Arrange
+            var productId = 1;
+            var httpClientMock = new Mock<HttpMessageHandler>();
+            httpClientMock
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .ReturnsAsync(new HttpResponseMessage {
+                    StatusCode = HttpStatusCode.BadRequest,
+                    Content = new StringContent("EntityNotFoundError"),
+                });
+
+            var httpClient = new HttpClient(httpClientMock.Object) {
+                BaseAddress = new Uri("http://localhost")
+            };
+            _httpClientFactoryMock.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(httpClient);
+
+            // Act & Assert
+            await Assert.ThrowsAsync<NotFoundException>(() => _productsService.DeleteProductAsync(productId));
+        }
+
+        [Fact]
+        public async Task DeleteProductAsync_ShouldCompleteSuccessfully_WhenProductExists() {
+            // Arrange
+            var productId = 1;
+            var httpClientMock = new Mock<HttpMessageHandler>();
+            httpClientMock
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .ReturnsAsync(new HttpResponseMessage {
+                    StatusCode = HttpStatusCode.OK,
+                    Content = new StringContent("true"),
+                });
+
+            var httpClient = new HttpClient(httpClientMock.Object) {
+                BaseAddress = new Uri("http://localhost")
+            };
+            _httpClientFactoryMock.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(httpClient);
+
+            // Act
+            await _productsService.DeleteProductAsync(productId);
+
+            // Should not throw an Exception
+        }
     }
 }

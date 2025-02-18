@@ -89,5 +89,29 @@ namespace CSharpApp.Application.Categories {
                 throw new Exception($"Failed to update category {categoryId}. API response: {errorResponse}");
             }
         }
+
+        public async Task DeleteCategoryAsync(int categoryId) {
+
+            var client = _httpClientFactory.CreateClient( _restApiSettings.APIName);
+
+            var requestUrl = $"{_restApiSettings.Categories}/{categoryId}";
+
+            var response = await client.DeleteAsync(requestUrl);
+            if (!response.IsSuccessStatusCode) {
+                var errorResponse = await response.Content.ReadAsStringAsync();
+
+                if(response.StatusCode == HttpStatusCode.BadRequest && errorResponse.Contains("EntityNotFoundError")) {
+                    throw new NotFoundException($"Category with ID {categoryId} not found.", errorResponse);
+                }
+
+                if (response.StatusCode == HttpStatusCode.BadRequest && errorResponse.Contains("QueryFailedError")) {
+                    throw new BadRequestException($"Category with ID {categoryId} cannot be deleted. It is in use as a product category", errorResponse);
+                }
+
+                throw new Exception($"failed to delete category {categoryId}. API response: {errorResponse}");
+            }
+
+
+        }
     }
 }
