@@ -4,6 +4,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{09E4065D-8EA9-43F4-AB9C-5E70ACC35F88}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		CSharpApp.Api\Dockerfile = CSharpApp.Api\Dockerfile
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{AEEC3AD8-B5EE-4590-8714-024364B7557A}"
 EndProject
