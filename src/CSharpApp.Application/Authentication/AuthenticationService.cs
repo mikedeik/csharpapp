@@ -51,7 +51,16 @@ namespace CSharpApp.Application.Authentication {
         public async Task<AuthResponse> Refresh(string refreshToken) {
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var jwtToken = tokenHandler.ReadJwtToken(refreshToken);
+
+            JwtSecurityToken jwtToken;
+            
+            try {
+                jwtToken = tokenHandler.ReadJwtToken(refreshToken);
+            } catch (SecurityTokenMalformedException ex) {
+
+                throw new BadRequestException("The refresh token is not valid", ex.Message);
+            }
+
             string email = jwtToken.Claims.FirstOrDefault(c => c.Type == "unique_name")?.Value ?? throw new UnauthorizedException("The refresh token is not valid");
 
             // A simple validation that the user exists since we are not storing/forwarding tokens of the 
