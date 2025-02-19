@@ -71,6 +71,15 @@ All endpoints for CRUD operations require a Bearer token. The access token can b
 A Request Performance middleware has been implemented inside the infrastructure project which will log the method the path of the endpoint and the time it took to execute.  
 
 **#Comments**  
-As another best practice I implemented an ExceptionHandler Middleware and created some custom exceptions to better describe the errors/problems that occured to the client. The middleware also logs the full exception for better understanding of the problem.  
+* As another best practice I implemented an ExceptionHandler Middleware and created some custom exceptions to better describe the errors/problems that occured to the client. The middleware also logs the full exception for better understanding of the problem.  
+* I also added a CacheService implementation. For this project it uses memory cache to store Products and Categories.  
+To better implement this, since we are utilizing an external API, we would need webhooks to be precise on the Invalidation of the cache since other apps may be changing the content, or have some knowledge of what is a good expiration time for the cache from the external api, to be accurate that our data is valid.  
+In a case where the application gets the data from a database which we own we could implement is a redistributable cache (shared between instances of the app).  
+You can find the CachingSettings in the appsettings.json 
+* I also used CQRS pattern to handle queries and commands which will try get the data from the cache if exists, or invoke the equivalent service function and set the cache.  
+* A dockerfile has been added inside the /src folder. To build the image use the ```docker build -t image_name . ``` command.  
+To run the image execute the ```docker run -d -p 5225:8080 --name container_name image_name``` command.
+* Unit tests have been implemented for all the services and handlers.
+I did not add tests for controllers since they are just wrapping the mediator messages. 
 
 
