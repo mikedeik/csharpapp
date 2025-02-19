@@ -80,6 +80,8 @@ You can find the CachingSettings in the appsettings.json
 * A dockerfile has been added inside the /src folder. To build the image use the ```docker build -t image_name . ``` command.  
 To run the image execute the ```docker run -d -p 5225:8080 --name container_name image_name``` command.
 * Unit tests have been implemented for all the services and handlers.
-I did not add tests for controllers since they are just wrapping the mediator messages. 
+I did not add tests for controllers since they are just wrapping the mediator messages.
+* I also added a postman collection for the api.
+  
 
 
