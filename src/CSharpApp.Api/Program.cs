@@ -1,7 +1,6 @@
-using CSharpApp.Application.Products.Queries;
 using CSharpApp.Infrastructure.Middleware;
 using CSharpApp.Infrastructure.Middleware.App.Api.Middleware;
-using MediatR;
+
 
 var builder = WebApplication.CreateBuilder(args);
 

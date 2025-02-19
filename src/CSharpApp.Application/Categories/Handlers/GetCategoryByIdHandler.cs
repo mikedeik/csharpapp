@@ -6,7 +6,7 @@ namespace CSharpApp.Application.Categories.Handlers;
 
 public class GetCategoryByIdHandler: IRequestHandler<GetCategoryByIdQuery, Category>
 {
-     private readonly ICategoriesService _categoriesService;
+    private readonly ICategoriesService _categoriesService;
     private readonly ICacheService _cacheService;
     private readonly CacheSettings _cacheSettings;
 
