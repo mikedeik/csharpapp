@@ -29,6 +29,9 @@ namespace CSharpApp.Application.Categories {
             if (!response.IsSuccessStatusCode) {
                 var errorResponse = await response.Content.ReadAsStringAsync();
 
+                if (response.StatusCode == HttpStatusCode.BadRequest && errorResponse.Contains("SQLITE_CONSTRAINT_UNIQUE")) {
+                    throw new BadRequestException($"Failed to create category. A Category with the same Name allready exists.", errorResponse);
+                }
                 throw new BadRequestException($"Failed to create category. Status Code: {response.StatusCode}", errorResponse);
             }
 

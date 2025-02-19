@@ -69,6 +69,10 @@ public class ProductsService : IProductsService
 
                 throw new BadRequestException($"Category with ID {newProduct.CategoryId} not found.", errorResponse);
             }
+
+            if(response.StatusCode == HttpStatusCode.BadRequest && errorResponse.Contains("SQLITE_CONSTRAINT_UNIQUE")) {
+                throw new BadRequestException($"Failed to create product. A product with the same title allready exists", errorResponse);
+            }
             throw new BadRequestException($"Failed to create product. Status Code: {response.StatusCode}", errorResponse);
         }
 
