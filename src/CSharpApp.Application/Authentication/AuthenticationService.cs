@@ -61,7 +61,7 @@ namespace CSharpApp.Application.Authentication {
                 throw new BadRequestException("The refresh token is not valid", ex.Message);
             }
 
-            string email = jwtToken.Claims.FirstOrDefault(c => c.Type == "unique_name")?.Value ?? throw new UnauthorizedException("The refresh token is not valid");
+            string email = jwtToken.Claims.FirstOrDefault(c => c.Type == "refresh")?.Value ?? throw new UnauthorizedException("The refresh token is not valid");
 
             // A simple validation that the user exists since we are not storing/forwarding tokens of the 
             // external api will be to call the users/is-available for the stored email.
@@ -120,7 +120,7 @@ namespace CSharpApp.Application.Authentication {
 
         private string GenerateRefreshToken(string email) {
             var claims = new List<Claim>() {
-                new Claim(ClaimTypes.Name, email),
+                new Claim("refresh", email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 

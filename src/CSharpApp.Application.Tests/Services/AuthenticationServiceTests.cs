@@ -1,9 +1,6 @@
-﻿using Xunit;
-using Moq;
+﻿using Moq;
 using System.Net;
 using System.Text;
-using System.Net.Http;
-using System.Threading.Tasks;
 using System.Text.Json;
 using Microsoft.Extensions.Options;
 using CSharpApp.Core.Dtos.Auth;
