@@ -21,10 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Handlers\ProductsHandlers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\CSharpApp.Application\CSharpApp.Application.csproj" />
   </ItemGroup>
 
