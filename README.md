@@ -44,7 +44,7 @@ We must measure and log the performance of the requests. Create a middleware to 
 
 ## Code refactoring  
 * Changed the way the httpClient is created by Configurind and injecting inside the Services the IHttpClientFactory.
-* Changed the registration of the services to be Transient instead of Singletons, since they do not share any data. 
+* Changed the registration of the services to be Transient instead of Singletons, since they do not maintain any state. 
 * Fixed a bug on ProductDto where the Images array was missing the setter, causing it to not return the list of url strings.
 * Changed the default configuration to validate the Settings classes as initialized by the project, to prevent bugs in the case of configuration missing from the appsettings.json
 * Implemented a JsonConverter to properly return the array of images inside the product Dto, as the external api returns a single string every time
